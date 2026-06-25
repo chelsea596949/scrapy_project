@@ -1,0 +1,44 @@
+name: PTT Stock Crawler & AI Analysis Schedule
+
+on:
+  schedule:
+    # 使用Cron語法設定定時任務
+    # 這裡設定每天台灣時間早上01:00自動執行(對應國際標準時UTC 17:00)
+    - cron: '0 17 * * *'      
+  workflow_dispatch: # GitHub網頁上手動點按鈕執行
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest # 在GitHub免費提供的Linux虛擬機上跑
+
+    steps:
+    # 複製GitHub倉庫程式碼到虛擬機上
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    # 安裝Python環境
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+        cache: 'pip' # 開啟快取, 加速以後每天的執行速度
+
+    # 安裝專案所有必要的Python第三方套件
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install scrapy pandas sqlalchemy psycopg2-binary jieba transformers torch wordcloud plotly python-dotenv
+
+    # 執行Scrapy爬蟲與AI情緒分析
+    # 透過working-directory切換到正確目錄, 並用env注入GitHub Secrets加密密碼
+    - name: Run Crawler and AI Sentiment Analysis Pipeline
+      working-directory: ./crawler_project
+      env:
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+      run: |
+        scrapy crawl ptt_stock
+        python analyze.py
