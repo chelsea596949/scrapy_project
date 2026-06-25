@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install scrapy pandas sqlalchemy psycopg2-binary jieba transformers torch wordcloud plotly python-dotenv
+        pip install -r requirements.txt
 
     # 執行Scrapy爬蟲與AI情緒分析
     # 透過working-directory切換到正確目錄, 並用env注入GitHub Secrets加密密碼
