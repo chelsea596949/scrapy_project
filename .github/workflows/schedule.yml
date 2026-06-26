@@ -46,6 +46,7 @@ jobs:
 
     # 資料庫清理任務
     - name: Run Database Pruning(Drop Overdue Tables)
+      working-directory: ./crawler_project
       env:
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
