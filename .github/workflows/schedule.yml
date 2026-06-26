@@ -49,7 +49,7 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: "data: auto-update ptt_stock_analyzed.csv [skip ci]"
-        file_pattern: 'ptt_stock_analyzed.csv' # 只針對這個檔案進行commit
+        file_pattern: 'crawler_project/ptt_stock_analyzed.csv' # 只針對這個檔案進行commit
 
     # 資料庫清理任務
     - name: Run Database Pruning(Drop Overdue Tables)
