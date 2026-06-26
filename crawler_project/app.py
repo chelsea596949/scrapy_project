@@ -5,7 +5,7 @@ from wordcloud import WordCloud# 文字雲套件
 import matplotlib.pyplot as plt# 繪圖套件
 from datetime import datetime, timedelta
 from pathlib import Path
-import os
+# import os
 from wordcloud import WordCloud
 
 # 網頁基本設定(頁面標題、Icon)
@@ -20,12 +20,13 @@ st.set_page_config(
 st.title(page_icon+page_title)
 st.markdown("本儀表板展示了從PTT Stock版爬取的即時數據, 並透過BERT深度學習模型進行情緒標籤與信心分數分析")
 
+# 動態取得app.py所在的資料夾路徑
+current_dir = Path(__file__).parent
+
 # 利用Cache機制安全載入資料
 @st.cache_data(ttl=60)# ttl=60代表每60秒會自動過期重新讀取, 達到即時更新效果
 def load_data():
     try:
-        # 動態取得app.py所在的資料夾路徑
-        current_dir = Path(__file__).parent
         csv_path = current_dir / 'ptt_stock_analyzed.csv'
         
         # 讀取分析後的 CSV
@@ -143,20 +144,19 @@ if total_articles > 0:
     
     text_for_cloud = " ".join(all_words)
     
+    # 取得目前路徑
+    # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
     if text_for_cloud.strip():
         # 讀取自定義的停用詞清單
         try:
-            with open('stopwords.txt', 'r', encoding='utf-8') as f:
+            # with open(os.path.join(BASE_DIR, "stopwords.txt"), 'r', encoding='utf-8') as f:
+            with open(current_dir / 'stopwords.txt', 'r', encoding='utf-8') as f:
                 custom_stopwords = set([line.strip() for line in f.readlines() if line.strip()])
         except FileNotFoundError:
             custom_stopwords = set() # 萬一沒讀到檔案就用空的set
 
-        # # 設定微軟正黑體微字型路徑, 否則中文會變框框死碼
-        # font_path = "C:\\Windows\\Fonts\\msjh.ttc"  # Windows預設正黑體路徑
-
-        # 取得目前 app.py 的目錄路徑
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        font_path = os.path.join(BASE_DIR, "msjh.ttf")
+        font_path = current_dir / 'msjh.ttf'
         
         wc = WordCloud(
             font_path=font_path,
