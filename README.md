@@ -80,3 +80,5 @@ python analyze.py
 streamlit run app.py
 ```
 網頁啟動成功後，預設可透過瀏覽本地網址：http://localhost:8501
+
+DEMO網址:https://scrapyproject-3s6zq4g7qurl5uqfep8ypq.streamlit.app/
