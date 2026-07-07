@@ -93,6 +93,13 @@ with col3:
 
 st.markdown("---")
 
+# 定義統一的情緒顏色字典（Key必須跟dataframe裡的值完全一模一樣）
+sentiment_color_map = {
+    'Positive': '#FF3B30',
+    'Negative': '#00A86B',
+    'NEUTRAL': '#7d7d7d'
+}
+
 # 焦點圖表區(Charts-左右排版)
 chart_col1, chart_col2 = st.columns(2)
 
@@ -108,7 +115,8 @@ with chart_col1:
             y='文章數量', 
             color='sentiment_label',
             labels={'date': '日期', 'sentiment_label': 'AI情緒傾向'},
-            markers=True
+            markers=True,
+            color_discrete_map=sentiment_color_map
         )
         st.plotly_chart(fig_trend, use_container_width=True)
     else:
@@ -125,7 +133,9 @@ with chart_col2:
             values='count', 
             names='sentiment_label', 
             hole=0.4,
-            color_discrete_map={'🚀正向(看多/樂觀)': '#ff4b4b', '😡負向(看空/崩潰)': '#1c83e1', '😐中立(無內容)': '#7d7d7d'}
+            # color_discrete_map={'🚀正向(看多/樂觀)': '#ff4b4b', '😡負向(看空/崩潰)': '#1c83e1', '😐中立(無內容)': '#7d7d7d'}
+            color='sentiment_label',
+            color_discrete_map=sentiment_color_map
         )
         st.plotly_chart(fig_pie, use_container_width=True)
     else:
